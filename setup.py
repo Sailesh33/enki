@@ -135,12 +135,10 @@ if __name__ == '__main__':
           install_requires=[
               'qutepart',
               'Markdown',
+              'regex==2016.10.22',
+              'CodeChat',
+              'Sphinx',
+              'flake8',
+              'jupyter',
           ],
-          extras_require={
-              'CodeChat':  ["CodeChat"],
-              'Preview Synchronization':  ["regex==2016.10.22"],
-              'Python Linting': ["flake8"],
-              'Build Sphinx documentation': ['Sphinx'],
-              'Python REPL': ['qtconsole'],
-          },
     )
