@@ -101,27 +101,26 @@ def _convertMarkdown(text):
                'Install it with your package manager or see ' \
                '<a href="http://packages.python.org/Markdown/install.html">installation instructions</a>'
 
-    extensions = ['fenced_code', 'nl2br', 'tables', 'enki.plugins.preview.mdx_math']
+    class _StrikeThroughExtension(markdown.Extension):
+        """http://achinghead.com/python-markdown-adding-insert-delete.html
+        Class is placed here, because depends on imported markdown, and markdown
+        import is lazy
+        """
+        DEL_RE = r'(~~)(.*?)~~'
 
-    # version 2.0 supports only extension names, not instances
-    if markdown.version_info[0] > 2 or \
-       (markdown.version_info[0] == 2 and markdown.version_info[1] > 0):
+        def extendMarkdown(self, md, md_globals):
+            # Create the del pattern
+            delTag = markdown.inlinepatterns.SimpleTagPattern(self.DEL_RE,
+                                                              'del')
+            # Insert del pattern into markdown parser
+            md.inlinePatterns.add('del', delTag, '>not_strong')
 
-        class _StrikeThroughExtension(markdown.Extension):
-            """http://achinghead.com/python-markdown-adding-insert-delete.html
-            Class is placed here, because depends on imported markdown, and markdown import is lazy
-            """
-            DEL_RE = r'(~~)(.*?)~~'
+    extensions = [
+        'markdown.extensions.fenced_code', 'markdown.extensions.nl2br',
+        'markdown.extensions.tables', 'enki.plugins.preview.mdx_math',
+        _StrikeThroughExtension()]
 
-            def extendMarkdown(self, md, md_globals):
-                # Create the del pattern
-                delTag = markdown.inlinepatterns.SimpleTagPattern(self.DEL_RE, 'del')
-                # Insert del pattern into markdown parser
-                md.inlinePatterns.add('del', delTag, '>not_strong')
-
-        extensions.append(_StrikeThroughExtension())
-
-    return markdown.markdown(text, extensions)
+    return markdown.markdown(text, extensions=extensions)
 
 
 def _convertReST(text):

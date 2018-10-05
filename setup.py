@@ -134,8 +134,10 @@ if __name__ == '__main__':
           license='gpl2',
           install_requires=[
               'qutepart',
-              'Markdown',
-              'regex==2016.10.22',
+              'Markdown>=3.0.0',
+              # This older version of regex doesn't crash on approximate
+              # matches. However, it doesn't have a wheel for Python 3.7.
+              'regex==2016.10.22; python_version < "3.7"',
               'CodeChat',
               'Sphinx',
               'flake8',
